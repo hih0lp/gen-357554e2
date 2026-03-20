@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section class="gradient-hero py-16 md:py-24">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-6">Не забудьте порадовать близких</h1>
+            <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">Свежие букеты с доставкой за 60 минут. Эмоции, которые остаются.</p>
+            <a href="#order" class="btn-primary text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 inline-block hover:scale-105">
+                <i class="fas fa-bolt mr-2"></i>Заказать за 60 секунд
+            </a>
+        </div>
+    </section>
+
+    <section class="py-16" id="catalog">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Популярные букеты</h2>
+            {% if products %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for product in products %}
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover transition-all duration-300">
+                            <div class="h-64 overflow-hidden">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                                {% else %}
+                                    <div class="w-full h-full bg-emerald-100 flex items-center justify-center">
+                                        <i class="fas fa-flower text-5xl text-emerald-400"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">{{ product.name }}</h3>
+                                <p class="text-gray-600 mb-4 line-clamp-2">{{ product.description|truncatechars:100 }}</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-2xl font-bold text-emerald-700">{{ product.price }} ₽</span>
+                                    <span class="px-3 py-1 rounded-full text-sm {% if product.is_available %}bg-emerald-100 text-emerald-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                        {% if product.is_available %}В наличии{% else %}Нет в наличии{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-12">
+                    <i class="fas fa-flower text-6xl text-gray-300 mb-4"></i>
+                    <p class="text-xl text-gray-500 mb-6">Пока нет доступных букетов</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="py-16 bg-white" id="order">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto bg-gradient-to-br from-emerald-50 to-white rounded-2xl shadow-xl p-8 md:p-12">
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Оформить заказ</h2>
+                <form method="post" action="{% url 'create_order' %}" class="space-y-6">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">{{ form.customer_name.label }}</label>
+                        {{ form.customer_name }}
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">{{ form.customer_email.label }}</label>
+                        {{ form.customer_email }}
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">{{ form.customer_phone.label }}</label>
+                        {{ form.customer_phone }}
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">{{ form.product.label }}</label>
+                        {{ form.product }}
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">{{ form.comment.label }}</label>
+                        {{ form.comment }}
+                    </div>
+                    <button type="submit" class="btn-primary w-full text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                        <i class="fas fa-paper-plane mr-2"></i>Отправить заказ
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-gradient-to-r from-emerald-50 to-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Почему выбирают нас</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+                <div class="p-6">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-truck text-2xl text-emerald-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Быстрая доставка</h3>
+                    <p class="text-gray-600">Привезём букет за 60 минут в пределах города</p>
+                </div>
+                <div class="p-6">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-leaf text-2xl text-emerald-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Свежие цветы</h3>
+                    <p class="text-gray-600">Работаем напрямую с поставщиками, без посредников</p>
+                </div>
+                <div class="p-6">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-heart text-2xl text-emerald-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">С любовью</h3>
+                    <p class="text-gray-600">Каждый букет собирается флористом с душой</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
